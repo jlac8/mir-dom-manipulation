@@ -1,13 +1,34 @@
 import "./style.css";
 
-const contacts = [];
+let contacts = [];
 const ul = document.getElementById("contactList");
+
+fetchContacs();
 
 const form = document.getElementById("contactForm");
 form.addEventListener("submit", addContact);
 
 function fetchContacs() {
-  //localStorage
+  const storedContacts = localStorage.getItem("contacts");
+  if (storedContacts) {
+    contacts = JSON.parse(storedContacts);
+    contacts.forEach(renderContact); // Renderiza cada contacto almacenado
+  }
+}
+
+function renderContact(contact) {
+  const li = document.createElement("li");
+  li.id = contact.id;
+  const span = document.createElement("span");
+  span.innerText = contact.name;
+  const btnEdit = document.createElement("button");
+  btnEdit.innerText = "Edit";
+  const btnDelete = document.createElement("button");
+  btnDelete.innerText = "Delete";
+  li.appendChild(span);
+  li.appendChild(btnEdit);
+  li.appendChild(btnDelete);
+  ul.appendChild(li);
 }
 
 function addContact(event) {
@@ -33,7 +54,7 @@ function addContact(event) {
   };
 
   contacts.push(contact);
-  //updateLocalStorage();
+  updateLocalStorage();
   renderContact(contact);
 
   form.reset();
@@ -59,19 +80,8 @@ function isContactDuplicate(name) {
   return contacts.some((contact) => contact.name === name);
 }
 
-function renderContact(contact) {
-  const li = document.createElement("li");
-  li.id = contact.id;
-  const span = document.createElement("span");
-  span.innerText = contact.name;
-  const btnEdit = document.createElement("button");
-  btnEdit.innerText = "Edit";
-  const btnDelete = document.createElement("button");
-  btnDelete.innerText = "Delete";
-  li.appendChild(span);
-  li.appendChild(btnEdit);
-  li.appendChild(btnDelete);
-  ul.appendChild(li);
+function updateLocalStorage() {
+  localStorage.setItem("contacts", JSON.stringify(contacts));
 }
 
 function saveContacts() {}
