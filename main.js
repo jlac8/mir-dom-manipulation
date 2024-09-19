@@ -12,7 +12,7 @@ function fetchContacs() {
   const storedContacts = localStorage.getItem("contacts");
   if (storedContacts) {
     contacts = JSON.parse(storedContacts);
-    contacts.forEach(renderContact); // Renderiza cada contacto almacenado
+    contacts.forEach(renderContact);
   }
 }
 
@@ -23,12 +23,23 @@ function renderContact(contact) {
   span.innerText = contact.name;
   const btnEdit = document.createElement("button");
   btnEdit.innerText = "Edit";
+  btnEdit.addEventListener("click", editContact);
   const btnDelete = document.createElement("button");
   btnDelete.innerText = "Delete";
+  btnDelete.addEventListener("click", () => deleteContact(contact.id));
   li.appendChild(span);
   li.appendChild(btnEdit);
   li.appendChild(btnDelete);
   ul.appendChild(li);
+}
+
+function editContact() {}
+
+function deleteContact(id) {
+  const li = document.getElementById(id);
+  ul.removeChild(li);
+  contacts = contacts.filter((contact) => contact.id !== id);
+  updateLocalStorage();
 }
 
 function addContact(event) {
@@ -87,9 +98,5 @@ function updateLocalStorage() {
 function saveContacts() {}
 
 function countContacts() {}
-
-function editContact() {}
-
-function deleteContact() {}
 
 function sortContacts() {}
