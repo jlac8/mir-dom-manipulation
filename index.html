@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Manager</title>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Contacts Manager</h1>
+      </header>
+      <section class="contact-manager">
+        <section class="add-contact">
+          <h2>Add Contact</h2>
+          <form id="contactForm">
+            <label for="contactName">
+              <input
+                name="fullName"
+                type="text"
+                placeholder="name"
+                id="contactName"
+              />
+              <button>Add</button>
+            </label>
+          </form>
+        </section>
+        <section class="contact-list">
+          <h2>Contacts List</h2>
+          <p>Number of contacts: <span id="contact-count">0</span></p>
+          <button id="sortContacts">Sort Contacts</button>
+          <ul id="contactList"></ul>
+        </section>
+      </section>
+    </main>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
