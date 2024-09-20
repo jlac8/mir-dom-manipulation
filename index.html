@@ -21,6 +21,7 @@
                 type="text"
                 placeholder="name"
                 id="contactName"
+                maxlength="30"
               />
               <button>Add</button>
             </label>
@@ -28,8 +29,10 @@
         </section>
         <section class="contact-list">
           <h2>Contacts List</h2>
-          <p>Number of contacts: <span id="contactsCounter">0</span></p>
-          <button id="sortContacts">A-Z</button>
+          <p>
+            Number of contacts: <span id="contactsCounter">0</span
+            ><button id="sortContacts">A-Z</button>
+          </p>
           <ul id="contactList"></ul>
         </section>
       </section>
