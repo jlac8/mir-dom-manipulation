@@ -2,22 +2,32 @@ import "./style.css";
 
 let contacts = [];
 const ul = document.getElementById("contactList");
-const contactsCounter = document.getElementById("contactCounter");
+const contactsCounter = document.getElementById("contactsCounter");
 fetchContacs();
 const form = document.getElementById("contactForm");
 form.addEventListener("submit", addContact);
 const btnSort = document.getElementById("sortContacts");
 btnSort.addEventListener("click", sortContacts);
+let isSorted = false;
 let isEditing = false;
 
 function sortContacts() {
-  if (isEditing) return;
-  const sortedContacts = [...contacts].sort((a, b) =>
-    a.name.localeCompare(b.name)
-  );
-  ul.innerHTML = "";
-  sortedContacts.forEach(renderContact);
-  updateContactsCounter();
+  if (isEditing) {
+    alert("No puedes ordenar mientras estás editando el contacto");
+    return;
+  }
+  if (isSorted) {
+    ul.innerHTML = "";
+    contacts.forEach(renderContact);
+    isSorted = false;
+  } else {
+    const sortedContacts = [...contacts].sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+    ul.innerHTML = "";
+    sortedContacts.forEach(renderContact);
+    isSorted = true;
+  }
 }
 
 function addContact(event) {
@@ -89,9 +99,10 @@ function editContact(id) {
 
   const li = document.getElementById(id);
   const span = li.querySelector("span");
-  const btnEdit = li.querySelector("button");
+  const buttons = li.querySelectorAll("button");
   li.replaceChild(form, span);
-  btnEdit.style.display = "none";
+  buttons[0].style.display = "none";
+  buttons[1].style.display = "none";
   input.focus();
   input.select();
 }
@@ -126,8 +137,9 @@ function saveContact(event, id) {
   const form = li.querySelector("form");
   span.innerText = contactName;
   li.replaceChild(span, form);
-  const btnEdit = li.querySelector("button");
-  btnEdit.style.display = "inline";
+  const buttons = li.querySelectorAll("button");
+  buttons[0].style.display = "inline";
+  buttons[1].style.display = "inline";
   isEditing = false;
   updateContactsCounter();
 }
@@ -138,6 +150,7 @@ function deleteContact(id) {
   contacts = contacts.filter((contact) => contact.id !== id);
   updateStorage();
   updateContactsCounter();
+  // TODO isEditing = false
 }
 
 function formatName(fullName) {
