@@ -8,20 +8,16 @@ const form = document.getElementById("contactForm");
 form.addEventListener("submit", addContact);
 const btnSort = document.getElementById("sortContacts");
 btnSort.addEventListener("click", sortContacts);
-let isSorted = false;
+let isEditing = false;
 
 function sortContacts() {
-  if (isSorted) {
-    ul.innerHTML = "";
-    contacts.forEach(renderContact);
-  } else {
-    const sortedContacts = [...contacts].sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
-    ul.innerHTML = "";
-    sortedContacts.forEach(renderContact);
-  }
-  isSorted = !isSorted;
+  if (isEditing) return;
+  const sortedContacts = [...contacts].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
+  ul.innerHTML = "";
+  sortedContacts.forEach(renderContact);
+  updateContactsCounter();
 }
 
 function addContact(event) {
@@ -48,6 +44,7 @@ function addContact(event) {
 
   contacts.push(contact);
   updateStorage();
+  updateContactsCounter();
   renderContact(contact);
 
   form.reset();
@@ -71,18 +68,25 @@ function renderContact(contact) {
 }
 
 function editContact(id) {
+  isEditing = true;
   const contact = contacts.find((contact) => contact.id === id);
-  const form = document.createElement("form");
-  form.addEventListener("submit", () => saveContact(contact));
+  contacts = contacts.filter((contact) => contact.id !== id);
+  updateStorage();
   const label = document.createElement("label");
   const input = document.createElement("input");
   input.type = "text";
   input.value = contact.name;
+  input.name = "editName";
+
+  const form = document.createElement("form");
+  form.addEventListener("submit", (event) => saveContact(event, id));
+
   const btnSave = document.createElement("button");
   btnSave.innerText = "Save";
   label.appendChild(input);
   label.appendChild(btnSave);
   form.appendChild(label);
+
   const li = document.getElementById(id);
   const span = li.querySelector("span");
   const btnEdit = li.querySelector("button");
@@ -92,8 +96,40 @@ function editContact(id) {
   input.select();
 }
 
-function saveContact() {
+function saveContact(event, id) {
   event.preventDefault();
+  const { elements } = event.currentTarget;
+  const input = elements.namedItem("editName");
+  const contactName = formatName(input.value);
+
+  if (isFieldEmpty(contactName)) {
+    alert("El nombre no puede estar vacío.");
+    return;
+  }
+
+  if (isContactDuplicate(contactName)) {
+    alert("El contacto ya existe.");
+    return;
+  }
+
+  const updatedContact = {
+    id: id,
+    timestamp: Date.now(),
+    name: contactName,
+  };
+
+  contacts.push(updatedContact);
+  updateStorage();
+
+  const li = document.getElementById(id);
+  const span = document.createElement("span");
+  const form = li.querySelector("form");
+  span.innerText = contactName;
+  li.replaceChild(span, form);
+  const btnEdit = li.querySelector("button");
+  btnEdit.style.display = "inline";
+  isEditing = false;
+  updateContactsCounter();
 }
 
 function deleteContact(id) {
@@ -101,6 +137,7 @@ function deleteContact(id) {
   ul.removeChild(li);
   contacts = contacts.filter((contact) => contact.id !== id);
   updateStorage();
+  updateContactsCounter();
 }
 
 function formatName(fullName) {
