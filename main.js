@@ -150,7 +150,6 @@ function deleteContact(id) {
   contacts = contacts.filter((contact) => contact.id !== id);
   updateStorage();
   updateContactsCounter();
-  // TODO isEditing = false
 }
 
 function formatName(fullName) {

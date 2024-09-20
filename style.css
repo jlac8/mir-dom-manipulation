@@ -38,7 +38,8 @@ header {
 
 .contact-manager {
   display: flex;
-  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: center;
 }
 
 .add-contact {
@@ -52,12 +53,14 @@ header {
   min-width: 320px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  text-align: center;
+  width: auto;
 }
 
 P {
@@ -86,6 +89,21 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (min-width: 800px) {
+  .contact-manager {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+  .contact-list {
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 @media (prefers-color-scheme: light) {
